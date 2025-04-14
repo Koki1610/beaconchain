@@ -1247,7 +1247,7 @@ func (d *DataAccessService) GetValidatorDashboardSlashingsSummaryValidators(ctx 
 			goqu.L("r.epoch_end"),
 			goqu.L("r.validator_index"),
 			goqu.L("r.slashed"),
-			goqu.L("COALESCE(r.blocks_slashing_count, 0) AS slashed_amount")).
+			goqu.L("r.blocks_slashing_count AS slashed_amount")).
 		Where(goqu.L("(r.slashed OR r.blocks_slashing_count > 0)"))
 
 	// handle the case when we have a list of validators
