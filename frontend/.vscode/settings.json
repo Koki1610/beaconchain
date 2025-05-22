@@ -61,6 +61,7 @@
         "format.ts",
         "git",
         "git-blame-ignore",
+        "git-ignore",
         "healthz",
         "i18n",
         "logger",
