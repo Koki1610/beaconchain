@@ -115,6 +115,10 @@ const isRowExpandable = (row: VDBBlocksTableRow) => {
 }
 
 const { getTimestampFromEpoch } = useNetwork()
+const v1Domain = useV1Domain()
+const emit = defineEmits<{
+  (e: 'add-validator'): void,
+}>()
 </script>
 
 <template>
@@ -157,7 +161,7 @@ const { getTimestampFromEpoch } = useNetwork()
             >
               <template #body="slotProps">
                 <BcLink
-                  :to="`/validator/${slotProps.data.proposer}`"
+                  :to="`${v1Domain}/validator/${slotProps.data.proposer}`"
                   target="_blank"
                   class="link"
                 >
@@ -184,7 +188,7 @@ const { getTimestampFromEpoch } = useNetwork()
             >
               <template #body="slotProps">
                 <BcLink
-                  :to="`/epoch/${slotProps.data.epoch}`"
+                  :to="`${v1Domain}/epoch/${slotProps.data.epoch}`"
                   target="_blank"
                   class="link"
                 >
@@ -203,7 +207,7 @@ const { getTimestampFromEpoch } = useNetwork()
             >
               <template #body="slotProps">
                 <BcLink
-                  :to="`/slot/${slotProps.data.slot}`"
+                  :to="`${v1Domain}/slot/${slotProps.data.slot}`"
                   target="_blank"
                   class="link"
                 >
@@ -222,7 +226,7 @@ const { getTimestampFromEpoch } = useNetwork()
               <template #body="slotProps">
                 <BcLink
                   v-if="slotProps.data.block || slotProps.data.slot === 0"
-                  :to="`/block/${slotProps.data.block}`"
+                  :to="`${v1Domain}/block/${slotProps.data.block}`"
                   target="_blank"
                   class="link"
                 >
@@ -316,7 +320,7 @@ const { getTimestampFromEpoch } = useNetwork()
                     {{ $t("common.epoch") }}:
                   </div>
                   <BcLink
-                    :to="`/epoch/${slotProps.data.epoch}`"
+                    :to="`${v1Domain}/epoch/${slotProps.data.epoch}`"
                     target="_blank"
                     class="link"
                   >
@@ -331,7 +335,7 @@ const { getTimestampFromEpoch } = useNetwork()
                     {{ $t("common.slot") }}:
                   </div>
                   <BcLink
-                    :to="`/slot/${slotProps.data.slot}`"
+                    :to="`${v1Domain}/slot/${slotProps.data.slot}`"
                     target="_blank"
                     class="link"
                   >
@@ -393,7 +397,10 @@ const { getTimestampFromEpoch } = useNetwork()
               </div>
             </template>
             <template #empty>
-              <DashboardTableAddValidator v-if="!hasValidators" />
+              <DashboardTableAddValidator
+                v-if="!hasValidators"
+                @add-validator="emit('add-validator')"
+              />
             </template>
           </BcTable>
         </ClientOnly>

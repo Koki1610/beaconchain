@@ -148,6 +148,7 @@ watch(
 )
 
 const { getTimestampFromEpoch } = useNetwork()
+const v1Domain = useV1Domain()
 </script>
 
 <template>
@@ -198,7 +199,7 @@ const { getTimestampFromEpoch } = useNetwork()
           >
             <template #body="slotProps">
               <BcLink
-                :to="`/validator/${slotProps.data.validator}`"
+                :to="`${v1Domain}/validator/${slotProps.data.validator}`"
                 target="_blank"
                 class="link validator_link"
               >

@@ -40,7 +40,7 @@ export function useDashboardKeyProvider(
     dashboardKey.value = key
     if (isClientSide) {
       // we only want to change the url in the browser and don't want to trigger a page refresh
-      history.replaceState({}, '', newRoute.fullPath)
+      // history.replaceState({}, '', newRoute.fullPath)
     }
     dashboardKeyCookie.value = dashboardKey.value
   }

@@ -296,6 +296,9 @@ const handleInvalidSubmit = () => {
 const resetInput = () => {
   inputValidator.value = ''
 }
+const emit = defineEmits<{
+  (e: 'change-validators', value: string[]): void,
+}>()
 const handleSubmit = async (item: InternalPostSearchResponse['data'][number] | undefined) => {
   if (!item) return
   const {
@@ -319,11 +322,14 @@ const handleSubmit = async (item: InternalPostSearchResponse['data'][number] | u
     if (item.type === 'validator') {
       const newValidators = [
         ...currentValidators,
-        item.value.index,
-      ]
+        `${item.value.index}`,
+      ].toSorted()
       await loadData(encodeBase64Url(newValidators.join(',')))
         .then(() => addEntities([ `${item.value.index}` ]))
         .then(() => resetInput())
+        .then(() => {
+          emit('change-validators', newValidators)
+        })
         .catch((error) => {
           hasError = true
           if (error.statusCode === 400) {

@@ -30,7 +30,7 @@ const scrollToAddons = () => {
 </script>
 
 <template>
-  <BcPageWrapper>
+  <NuxtLayout>
     <div class="page-container">
       <div class="page-content">
         <div class="type-toggle-row">
@@ -69,7 +69,7 @@ const scrollToAddons = () => {
         </I18nT>
       </div>
     </div>
-  </BcPageWrapper>
+  </NuxtLayout>
 </template>
 
 <style lang="css">

@@ -64,9 +64,7 @@ const { dashboardKey } = useDashboardKey()
 const validatorDashboardOverviewStore = useValidatorDashboardOverviewStore()
 const { overview } = storeToRefs(validatorDashboardOverviewStore)
 const { groups } = useValidatorDashboardGroups()
-const storeLatestState = useLatestStateStore()
-const { latestState } = storeToRefs(storeLatestState)
-const latestSlot = ref(latestState.value?.current_slot || 0)
+const currentSlot = ref(useCurrentSlot().value)
 const {
   bounce: bounceTimeFrames,
   instant: instantTimeFrames,
@@ -100,7 +98,7 @@ const chartCategories = ref<number[]>([])
 
 const categories = computed<number[]>(() => {
   // charts have at least 5 slots delay, we give it 2 more to be sure
-  if (latestSlot.value <= 7 || !aggregation.value) {
+  if (currentSlot.value <= 7 || !aggregation.value) {
     return []
   }
   const maxSeconds
@@ -109,7 +107,7 @@ const categories = computed<number[]>(() => {
     return []
   }
   const list: number[] = []
-  let latestTs = getTimestampFromSlot(latestSlot.value - 7) || 0
+  let latestTs = getTimestampFromSlot(currentSlot.value - 7) || 0
   let step = 0
   switch (aggregation.value) {
     case 'daily':
@@ -138,7 +136,7 @@ const categories = computed<number[]>(() => {
 })
 
 const updateTimestamp = () => {
-  latestSlot.value = latestState.value?.current_slot || 0
+  currentSlot.value = useCurrentSlot().value
 }
 
 watch([

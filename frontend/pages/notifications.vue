@@ -61,14 +61,12 @@ const openManageNotifications = () => {
 
 <template>
   <div>
-    <BcPageWrapper>
-      <template #top>
-        <div class="overview">
-          <NotificationsOverview
-            @open-dialog="openManageNotifications"
-          />
-        </div>
-      </template>
+    <NuxtLayout>
+      <div class="overview">
+        <NotificationsOverview
+          @open-dialog="openManageNotifications"
+        />
+      </div>
       <NotificationsManagementModal
         v-model="manageNotificationsModalVisisble"
       />
@@ -106,7 +104,7 @@ const openManageNotifications = () => {
           />
         </template>
       </BcTabList>
-    </BcPageWrapper>
+    </NuxtLayout>
   </div>
 </template>
 

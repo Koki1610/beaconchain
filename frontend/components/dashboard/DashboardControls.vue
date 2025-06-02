@@ -48,8 +48,8 @@ const { fetch } = useCustomFetch()
 
 const isMobile = computed(() => width.value < 520)
 const manageGroupsModalVisisble = ref(false)
-const manageValidatorsModalVisisble = ref(false)
 
+const isVisibleManagementModal = defineModel<boolean>('isVisibleManagementModal')
 const manageButtons = computed<MenuBarEntry[] | undefined>(() => {
   if (isSharedDashboard.value) {
     return undefined
@@ -69,7 +69,7 @@ const manageButtons = computed<MenuBarEntry[] | undefined>(() => {
   if (dashboardType.value === 'validator') {
     buttons.push({
       command: () => {
-        manageValidatorsModalVisisble.value = true
+        isVisibleManagementModal.value = true
       },
       dropdown: false,
       faIcon: isMobile.value ? 'desktop' : undefined,
@@ -338,13 +338,17 @@ const editDashboard = () => {
     },
   })
 }
+const emit = defineEmits<{
+  (e: 'change-validators', value: string[]): void,
+}>()
 </script>
 
 <template>
   <DashboardGroupManagementModal v-model="manageGroupsModalVisisble" />
   <DashboardValidatorManagementModal
     v-if="dashboardType == 'validator'"
-    v-model="manageValidatorsModalVisisble"
+    v-model="isVisibleManagementModal"
+    @change-validators="emit('change-validators', $event)"
   />
   <div class="header-row">
     <div class="h1 dashboard-title">

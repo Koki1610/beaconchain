@@ -139,6 +139,10 @@ const findNextEpochDuties = (epoch: number) => {
   return list.join(', ')
 }
 const { getTimestampFromEpoch } = useNetwork()
+const v1Domain = useV1Domain()
+const emit = defineEmits<{
+  (e: 'add-validator'): void,
+}>()
 </script>
 
 <template>
@@ -181,7 +185,7 @@ const { getTimestampFromEpoch } = useNetwork()
             >
               <template #body="slotProps">
                 <BcLink
-                  :to="`/epoch/${slotProps.data.epoch}`"
+                  :to="`${v1Domain}/epoch/${slotProps.data.epoch}`"
                   class="link"
                   target="_blank"
                 >
@@ -375,7 +379,10 @@ const { getTimestampFromEpoch } = useNetwork()
               />
             </template>
             <template #empty>
-              <DashboardTableAddValidator v-if="!hasValidators" />
+              <DashboardTableAddValidator
+                v-if="!hasValidators"
+                @add-validator="emit('add-validator')"
+              />
             </template>
           </BcTable>
         </ClientOnly>

@@ -30,3 +30,8 @@ export type GetObjectPaths<T extends object> = {
       : K
     : never;
 }[keyof T]
+
+/**
+ * Get autocompletion for T while beeing able to also add a string
+ * */
+export type LooseAutocomplete<T> = (string & {}) | T

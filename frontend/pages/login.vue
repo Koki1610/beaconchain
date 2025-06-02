@@ -10,7 +10,6 @@ import {
 const { t: $t } = useTranslation()
 const { doLogin } = useUserStore()
 const toast = useBcToast()
-const route = useRoute()
 const { promoCode } = usePromoCode()
 
 useBcSeo('login_and_register.title_login')
@@ -35,6 +34,8 @@ const [
   passwordAttrs,
 ] = defineField('password')
 
+const route = useRoute()
+const { redirectTo } = route.query
 const onSubmit = handleSubmit(async (values) => {
   try {
     await doLogin(values.email, values.password)
@@ -44,13 +45,14 @@ const onSubmit = handleSubmit(async (values) => {
     }
 
     if (promoCode) {
-      await navigateTo({
+      return await navigateTo({
         path: '/pricing', query: { promoCode },
       })
     }
-    else {
-      await navigateTo('/')
+    if (redirectTo) {
+      return await navigateTo(decodeURIComponent(redirectTo as string))
     }
+    await navigateTo('/')
   }
   catch {
     password.value = ''
@@ -63,15 +65,15 @@ const onSubmit = handleSubmit(async (values) => {
 })
 
 const canSubmit = computed(() => email.value && password.value && !Object.keys(errors.value).length)
-
+const v1Domain = useV1Domain()
 const registerLink = computed(() => {
-  return provideMobileAuthParams(route.query, '/register')
+  return provideMobileAuthParams(route.query, `${v1Domain}/register`)
 })
 </script>
 
 <template>
-  <BcPageWrapper :minimalist-header="true">
-    <div class="page">
+  <div>
+    <NuxtLayout name="auth">
       <div class="container">
         <div class="title">
           {{ $t("login_and_register.title_login") }}
@@ -104,7 +106,7 @@ const registerLink = computed(() => {
               <div>{{ $t("login_and_register.password") }}</div>
               <div class="right-cell">
                 <BcLink
-                  to="/requestReset"
+                  :to="`${v1Domain}/requestReset`"
                   :target="Target.Internal"
                   class="link"
                 >
@@ -144,26 +146,18 @@ const registerLink = computed(() => {
           </div>
         </form>
       </div>
-    </div>
-  </BcPageWrapper>
+    </NuxtLayout>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 @use "~/assets/css/fonts.scss";
 
-.page {
   .container {
-    position: relative;
-    margin: auto;
-    margin-top: 100px;
-    margin-bottom: 30px;
+
     padding: var(--padding-large);
-    box-sizing: border-box;
-    width: min(530px, 100%);
-    @media (max-width: 600px) {
-      // mobile
-      margin-top: 0px;
-    }
+    max-width: 100%;
+    width: 530px;
 
     .title {
       @include fonts.dialog_header;
@@ -216,5 +210,4 @@ const registerLink = computed(() => {
       }
     }
   }
-}
 </style>

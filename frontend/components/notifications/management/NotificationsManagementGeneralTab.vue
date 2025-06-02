@@ -118,6 +118,7 @@ watchDebounced(() => store.settings.general_settings, async () => {
 }, {
   deep: true,
 })
+const v1Domain = useV1Domain()
 </script>
 
 <template>
@@ -212,7 +213,7 @@ watchDebounced(() => store.settings.general_settings, async () => {
       <div v-else>
         {{ tOf($t, "notifications.general.download_app", 0) }}
         <BcLink
-          to="/mobile"
+          :to="`${v1Domain}/mobile`"
           :target="Target.External"
           class="link"
         >

@@ -35,16 +35,16 @@ export function useHashTabs(tabs: HashTabs, defaultTab: string, useRouteHash = f
     window.location.hash = key
   }
 
-  watch(
-    activeTab,
-    (key) => {
-      if (isServerSide || key === '-1') {
-        return
-      }
-      updateHash(key)
-    },
-    { immediate: true },
-  )
+  // watch(
+  //   activeTab,
+  //   (key) => {
+  //     if (isServerSide || key === '-1') {
+  //       return
+  //     }
+  //     updateHash(key)
+  //   },
+  //   { immediate: true },
+  // )
 
   return {
     activeTab,

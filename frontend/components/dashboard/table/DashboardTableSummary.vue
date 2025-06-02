@@ -43,7 +43,10 @@ const {
 const { groups } = useValidatorDashboardGroups()
 const { width } = useWindowSize()
 const storageDashboardKey = computed(() => {
-  return dashboardKey.value || 'guest-dashboard'
+  if (isGuestDashboard.value) {
+    return 'guest-dashboard'
+  }
+  return dashboardKey.value
 })
 
 const cursor = ref<Cursor>()
@@ -150,6 +153,9 @@ watch(
   },
   { immediate: true },
 )
+const emit = defineEmits<{
+  (e: 'add-validator'): void,
+}>()
 </script>
 
 <template>
@@ -327,7 +333,10 @@ watch(
               />
             </template>
             <template #empty>
-              <DashboardTableAddValidator v-if="!hasValidators" />
+              <DashboardTableAddValidator
+                v-if="!hasValidators"
+                @add-validator="emit('add-validator')"
+              />
             </template>
           </BcTable>
         </ClientOnly>

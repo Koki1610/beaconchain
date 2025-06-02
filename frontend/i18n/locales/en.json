@@ -558,7 +558,12 @@
         "validator_dashboard": "Validator Dashboard"
     },
     "error": {
+        "404": {
+            "description": "It might have been orphaned, reorged, or never proposed.",
+            "title": "Oops, this Page Never Made It to Finality."
+        },
         "multiple_times": "The error {error} happened {count} times",
+        "we_are_sorry_error_occurred": "We're sorry, but an error occurred",
         "ws_error": "Webservice error"
     },
     "filter": {
@@ -665,6 +670,7 @@
     },
     "navigation": {
         "back": "Back",
+        "back_to_home": "Back to home",
         "cancel": "Cancel",
         "continue": "Continue",
         "delete": "Delete",

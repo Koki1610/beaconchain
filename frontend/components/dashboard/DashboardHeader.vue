@@ -92,12 +92,7 @@ const items = computed<MenuBarEntry[]>(() => {
     const gd = db as GuestDashboard
     return createMenuBarButton('validator', getDashboardName(gd), `${gd.key !== undefined ? gd.key : gd.id}`)
   }))
-  if (has('feature-account_dashboards')) {
-    addToSortedItems($t('dashboard.header.account'), dashboards.value?.validator_dashboards?.slice(0, 1).map((db) => {
-      const gd = db as GuestDashboard
-      return createMenuBarButton('account', getDashboardName(gd), `${gd.key ?? gd.id}`)
-    }))
-  }
+
   const disabledTooltip = !has('feature-notifications') ? $t('common.coming_soon') : undefined
   addToSortedItems($t('notifications.title'), [ {
     active: route.name === 'notifications',

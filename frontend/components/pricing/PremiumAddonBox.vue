@@ -261,7 +261,7 @@ const handleSubmitPurchase = async () => {
             v-if="isQuantityLimitReached"
             keypath="pricing.addons.contact_support.template"
             linkpath="pricing.addons.contact_support._link"
-            to="https://dsc.gg/beaconchain"
+            :to="LINK.discord"
           />
         </span>
 

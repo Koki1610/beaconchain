@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { useValidatorSlotVizStore } from '~/stores/dashboard/useValidatorSlotVizStore'
+import type { SlotVizEpoch } from '~/types/api/slot_viz'
 import type { SlotVizCategories } from '~/types/dashboard/slotViz'
+
+const props = defineProps<{
+  slotVizEpochs: SlotVizEpoch[],
+}>()
 
 const {
   dashboardKey,
 } = useDashboardKey()
 const { networkInfo } = useNetwork()
+
 const {
   loading: loadingSlotViz,
-  refreshSlotViz,
-  slotViz,
+  // refreshSlotViz,
+  // slotViz,
 } = useValidatorSlotVizStore()
 const { secondsPerSlot = 12 } = networkInfo.value
 const {
@@ -31,13 +37,13 @@ const activeValidatorGroups = computed(() =>
   overview.value?.groups.filter(group => !!group.count) || [],
 )
 const mostRecentScheduledSlotId = computed(() => {
-  if (!slotViz.value?.length) {
+  if (!props.slotVizEpochs?.length) {
     return
   }
   let id = -1
 
-  for (let i = 0; i < slotViz.value.length; i++) {
-    const row = slotViz.value[i]
+  for (let i = 0; i < props.slotVizEpochs.length; i++) {
+    const row = props.slotVizEpochs[i]
     if (!row.slots?.length) {
       continue
     }
@@ -69,24 +75,19 @@ watch(
   },
   { immediate: true },
 )
-watch(
-  () => selectedGroupIds.value,
-  () => {
-    useAsyncData('validator_dashboard_slot_viz', () =>
-      refreshSlotViz(dashboardKey.value, selectedGroupIds.value),
-    )
-    resetIntervalCounter()
-  },
-  { immediate: true },
-)
-watch(
-  () => counter.value,
-  async () => {
-    refetchingSlotViz.value = true
-    await refreshSlotViz(dashboardKey.value, selectedGroupIds.value)
-    refetchingSlotViz.value = false
-  },
-)
+// watch(
+//   () => selectedGroupIds.value,
+//   () => {
+//     useAsyncData('validator_dashboard_slot_viz', () =>
+//       refreshSlotViz(dashboardKey.value, selectedGroupIds.value),
+//     )
+//     resetIntervalCounter()
+//   },
+//   { immediate: true },
+// )
+const emit = defineEmits<{
+  (e: 'update-groups', group_ids: number[]): void,
+}>()
 </script>
 
 <template>
@@ -98,7 +99,7 @@ watch(
         dont-open-permanently
       >
         <BcLink
-          to="https://kb.beaconcha.in/v2beta/slot-visualization#how-does-it-work"
+          :to="LINK.knowledgeBaseSlotVisualization"
           target="_blank"
           class="link"
         >
@@ -122,7 +123,7 @@ watch(
         v-if="activeValidatorGroups.length > 1"
         :validator-groups="activeValidatorGroups"
         class="dashboard-slot-viz-group-selector"
-        @update-selected-group-ids="(newGroupIdSelection) => selectedGroupIds = newGroupIdSelection"
+        @update="emit('update-groups', $event)"
       />
     </div>
 
@@ -140,7 +141,7 @@ watch(
       class="dashboard-slot-viz-grid"
     >
       <template
-        v-for="row in slotViz"
+        v-for="row in slotVizEpochs"
         :key="row.epoch"
       >
         <div class="dashboard-slot-viz-grid-epoch">

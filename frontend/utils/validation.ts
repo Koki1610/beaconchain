@@ -11,3 +11,8 @@ export const validation = {
   boolean,
   url: (message: string) => string().url(message),
 }
+
+export const isNumber = (value: string) => {
+  const parsed = parseInt(value)
+  return !isNaN(parsed) && `${parsed}` === value
+}
